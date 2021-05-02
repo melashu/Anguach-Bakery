@@ -1,0 +1,4 @@
+{
+    "phpfmt.indent_with_space": 0,
+    "phpfmt.visibility_order": true
+}
