@@ -13,7 +13,8 @@ class DateModel {
     newDate = dateJson.map((e) {
       return DateModel.fromJson(e);
     }).toList();
-    newDate.add(DateModel(date: Utility.initDate));
+    // newDate.contains(DateModel(date: Utility.initDate)) ??
+    //     newDate.add(DateModel(date: Utility.initDate));
     return newDate;
   }
 

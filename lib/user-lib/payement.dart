@@ -1,4 +1,4 @@
-import 'package:dabo/model-lib/date_model.dart';
+// import 'package:dabo/model-lib/date_model.dart';
 import 'package:dabo/model-lib/payement_update.dart';
 import 'package:dabo/utility-lib/HttpRequest.dart';
 import 'package:dabo/utility-lib/Utility.dart';
@@ -17,8 +17,9 @@ class Payement extends StatefulWidget {
 class PayementState extends State<Payement> {
   String userName;
   String initialPlace = 'መጋገሪያ';
-  static String newDate;
+  String newDate;
   String initialDate;
+  String date11;
 
   // Utility.initDate;
   // =PayementState.initDate;
@@ -34,14 +35,11 @@ class PayementState extends State<Payement> {
   void initState() {
     super.initState();
     getDateFromDatabase(userName);
-    // initDate;
   }
 
-  // var onPressed;
   PayementState(this.userName, this.initialDate);
   @override
   Widget build(BuildContext context) {
-    print("Today=$initialDate");
     return Scaffold(
         appBar: AppBar(
             title: Text('*${this.userName.toUpperCase()}* እንኮን ደህና መጣህ')),
@@ -59,19 +57,30 @@ class PayementState extends State<Payement> {
                 ),
                 Row(
                   children: [
-                    Text(
-                      "ቀን",
-                      style: Utility.textStyle,
+                    Row(
+                      children: [
+                        Text(
+                          "ቀን",
+                          style: Utility.textStyle,
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.refresh),
+                            onPressed: () {
+                              setState(() {
+                                newDate = this.date11;
+                              });
+                            })
+                      ],
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     DropdownButton<String>(
                       items: items,
-                      value: initialDate,
+                      value: newDate,
                       onChanged: (String value) {
                         setState(() {
-                          initialDate = value;
+                          newDate = value;
                         });
                       },
                     )
@@ -114,7 +123,7 @@ class PayementState extends State<Payement> {
                         setState(() {
                           initialPlace = value;
                         });
-                        getBirr(initialDate, initialPlace);
+                        getBirr(newDate, initialPlace);
                       },
                     )
                   ],
@@ -154,32 +163,67 @@ class PayementState extends State<Payement> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('$initialPlace ላይ ያልተከፈለ ብር $unPaidBirr ብር'),
+                  child: Text(
+                    '$initialPlace ላይ ያልተከፈለ ብር $unPaidBirr ብር',
+                    style: Utility.textStyle,
+                  ),
                 ),
                 Divider(
                   thickness: 3.0,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('$initialPlace ላይ የተከፈለ ብር $paidBirr ብር'),
+                  child: Text(
+                    '$initialPlace ላይ የተከፈለ ብር $paidBirr ብር',
+                    style: Utility.textStyle,
+                  ),
                 ),
                 OutlinedButton(
                   onPressed: () {
-                    if (paidBirrController.text == '0') {
+                    if (paidBirrController.text == '0' ||
+                        paidBirrController.text.isEmpty) {
                       Utility.showSnakBar(
-                          "እባክህ የምትከፍለውን ብር አስገባ", context, Colors.yellow[400]);
-                    } else {
+                          "እባክህ የምትከፍለውን ብር አስገባ", context, Colors.red[400]);
+                    } else if (newDate.isEmpty) {
+                      Utility.showSnakBar(
+                          "እባክህ ቀኑን ምርት", context, Colors.red[400]);
+                    } else if(this.unPaidBirr==0){
+                        Utility.showSnakBar(
+                          "${this.initialPlace } ላይ ሁሉም ሒሳብ ከዚህ በፊት ተከፍሎል ፡፡", context, Colors.red[400]);
+                    }
+                    
+                     else {
+                      Utility.showAlertDialog(context, "እባክህ ትንሽ ጠብቅ");
+/**
+ *  double oldPaiedBirr,
+      double oldUnPaidBirr,
+      double newPaidBirr,
+      String date,
+      String place,
+      String userName,
+      BuildContext context
+ */
+
+                      // print(paidBirrController.text is String);
                       PayementUpdate.updatePayement(
                               this.paidBirr,
                               this.unPaidBirr,
-                              double.parse(paidBirrController.text),
-                              this.initialDate,
+                              paidBirrController.text,
+                              this.newDate,
                               this.initialPlace,
-                              userName)
+                              userName,
+                              context)
                           .then((value) {
+                        Navigator.pop(context);
                         if (value) {
                           Utility.showSnakBar(
                               "ሒሳቦ በትክክል ተከፍሎል ", context, Colors.green[400]);
+                          setState(() {
+                            this.unPaidBirr = this.unPaidBirr -
+                                double.parse(paidBirrController.text);
+                                this.paidBirr=this.paidBirr+
+                                double.parse(paidBirrController.text);
+                          });
                         } else {
                           Utility.showSnakBar(
                               "ይቅርታ ሒሳቦን መክፈል አልተቻለም፡፡ ለመሹ 0980631983 ",
@@ -200,13 +244,14 @@ class PayementState extends State<Payement> {
 
   static String get getDate {
     // setStat
-    return PayementState.newDate;
+    // return PayementState.newDate;
   }
 
   void getDateFromDatabase(String userName) {
     futureDateModel(userName).then((value) {
-      // PayementState.newDate = value[0].date;
-      print('date of=${PayementState.newDate}');
+      this.date11 = value[0].date;
+      //
+      // print('date of=${PayementState.newDate}');
       for (var date in value) {
         items.add(DropdownMenuItem<String>(
           child: Text(date.date),
@@ -217,13 +262,16 @@ class PayementState extends State<Payement> {
   }
 
   void getBirr(String date, String place) async {
+    Utility.showAlertDialog(context, "እባክህ ትንሽ ጠብቅ");
     var payementModel = await futurePayementModel(userName, date, place);
+    Navigator.pop(context, true);
     double val1 = 0;
     double val2 = 0;
     for (var pay in payementModel) {
       val1 = val1 + double.parse(pay.unPaidBirr);
       val2 = val2 + double.parse(pay.paidBirr);
     }
+
     setState(() {
       unPaidBirr = val1;
       paidBirr = val2;

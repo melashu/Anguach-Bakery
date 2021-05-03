@@ -9,50 +9,6 @@ import 'package:flutter/material.dart';
 
 import 'AddDabo.dart';
 
-// class Home extends StatefulWidget {
-//   final String userName;
-//   Home(this.userName);
-//   @override
-//   _HomeState createState() => _HomeState(userName);
-//   // initSta
-// }
-
-// class _HomeState extends State<Home> {
-//   String userName;
-//   static Future<List<Dabo>> futureDabo;
-//   _HomeState(this.userName);
-
-//   static Future<List<Dabo>> get getFuture {
-//     return futureDabo;
-//   }
-
-// // ignore: slash_for_doc_comments
-// /**
-//     getListOfDabo(userName);
-//  * is defined inside GetDaboList.dart file
-//  */
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     futureDabo = getListOfDabo(userName);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//         title: 'Anguach Dabo',
-//         debugShowCheckedModeBanner: false,
-//         theme: ThemeData(
-//           primarySwatch: Colors.blue,
-//           accentColor: Colors.redAccent,
-//           // bri
-//         ),
-//         home: HomeScaffold(userName));
-//     // return getScaffold();
-//   }
-// }
-
 class Home extends StatefulWidget {
   Home(this.userName);
   final String userName;
@@ -62,7 +18,6 @@ class Home extends StatefulWidget {
     return GetScaffold(this.userName);
   }
 }
-
 class GetScaffold extends State<Home> {
   final String userName;
     String initDate = Utility.initDate;

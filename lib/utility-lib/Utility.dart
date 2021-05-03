@@ -49,8 +49,10 @@ class Utility {
   }
 
   static void insertDabo(Map<String, dynamic> dabo, BuildContext c) async {
-    showAlertDialog(c, "Wait");
+    Utility.showAlertDialog(c, "እባክህ ትንሽ ጠብቅ");
+
     bool result = await Insert.insertDabo(dabo);
+    Navigator.pop(c);
     if (result) {
       showSnakBar("በትክክል ተመዝግቦል", c, Colors.greenAccent);
     } else {
@@ -132,7 +134,7 @@ class Utility {
     // return null;
   }
 
-  double get totalPaidBirr {
+   double get totalPaidBirr {
     return _totalPaidBirr;
   }
 
@@ -220,10 +222,12 @@ class Utility {
 
   static void showAlertDialog(BuildContext context, String message) {
     var alertDialog = AlertDialog(
+      contentPadding: EdgeInsets.all(20),
       title: Text(message),
+      titlePadding: EdgeInsets.only(left: 10),
       elevation: 30,
       content: CircularProgressIndicator(
-        strokeWidth: 10,
+        // strokeWidth: 10,
         backgroundColor: Colors.blueAccent,
       ),
     );

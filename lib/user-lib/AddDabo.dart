@@ -55,6 +55,9 @@ class _BodyState extends State<Body> {
     return Scaffold(
       appBar: AppBar(
         title: Text('የዳቦ መመዝገቢያ በ $userName'),
+        actions: [
+          Text('${Utility().totalPaidBirr}')
+        ],
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -428,6 +431,7 @@ class _BodyState extends State<Body> {
                             };
 
                             Utility.insertDabo(dabo, context);
+                            // Navigator.pop(context,true);
                           }
                         });
                       },
