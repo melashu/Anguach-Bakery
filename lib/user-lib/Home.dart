@@ -1,9 +1,12 @@
+import 'package:dabo/admin-lib/debt.dart';
 import 'package:dabo/user-lib/payement.dart';
 import 'package:dabo/utility-lib/HttpRequest.dart';
 import 'package:dabo/model-lib/dabo.dart';
 import 'package:dabo/user-lib/login.dart';
 import 'package:dabo/user-lib/return.dart';
 import 'package:dabo/utility-lib/Utility.dart';
+import 'package:dabo/utility-lib/content_update.dart';
+import 'package:dabo/utility-lib/report.dart';
 // import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +35,7 @@ class GetScaffold extends State<Home> {
   void initState() {
     super.initState();
 
-    futureDabo = getListOfDabo(userName);
+    futureDabo = getListOfDabo(this.userName);
   }
 
   GetScaffold(this.userName);
@@ -40,6 +43,8 @@ class GetScaffold extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      persistentFooterButtons: [Text('show')],
+
       appBar: AppBar(title: Text('$userName'), actions: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -70,6 +75,7 @@ class GetScaffold extends State<Home> {
         tooltip: 'ዳቦ መዝግብ',
         child: Icon(Icons.add),
       ),
+    
     );
   }
 
@@ -133,13 +139,91 @@ class GetScaffold extends State<Home> {
               },
             ),
           ),
+           Card(
+            elevation: 10,
+            margin: EdgeInsets.all(5),
+            child: ListTile(
+              title: Text(
+                'ሪፖርት',
+                style: Utility.textStyle,
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ReportHome(this.userName);
+                }));
+              },
+            ),
+          ),
+           Card(
+            elevation: 10,
+            margin: EdgeInsets.all(5),
+            child: ListTile(
+              title: Text(
+                'የሰራተኞች ጉዳይ',
+                style: Utility.textStyle,
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  // return Payement(this.userName, this.initDate);
+                }));
+              },
+            ),
+          ),
+           Card(
+            elevation: 10,
+            margin: EdgeInsets.all(5),
+            child: ListTile(
+              title: Text(
+                'ንብረት',
+                style: Utility.textStyle,
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  // return Payement(this.userName, this.initDate);
+                }));
+              },
+            ),
+          ),
+             Card(
+            elevation: 10,
+            margin: EdgeInsets.all(5),
+            child: ListTile(
+              title: Text(
+                'ማስተካከያ',
+                style: Utility.textStyle,
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return UpdateHome(this.userName, 'ALL_DATE');
+                }));
+              },
+            ),
+          ),
+           Card(
+                    elevation: 10,
+                    margin: EdgeInsets.all(5),
+                    child: ListTile(
+                      title: Text(
+                        'Debt ',
+                        style: Utility.textStyle,
+                      ),
+                      // trailing: Text('new'),
+                      onTap: () {
+                        Navigator.push(c, MaterialPageRoute(builder: (context) {
+                          return Debt();
+                        }));
+
+                        return LinearProgressIndicator();
+                      },
+                    ),
+                  ),
           Card(
             elevation: 10,
             margin: EdgeInsets.all(5),
             child: ListTile(
               leading: Icon(Icons.logout),
               title: Text(
-                'ወጣ',
+                'ውጣ',
                 style: Utility.textStyle,
               ),
               onTap: () {

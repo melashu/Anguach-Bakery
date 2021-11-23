@@ -4,6 +4,7 @@ class DetailDabo {
   String place;
   String bale_2_25;
   String bale_2_5;
+  String bale_3;
   String bale5;
   String bale10;
   String bale75;
@@ -20,6 +21,7 @@ class DetailDabo {
   DetailDabo(
       {this.bale_2_25,
       this.bale_2_5,
+      this.bale_3,
       this.bale5,
       this.bale10,
       this.bale75,
@@ -46,6 +48,7 @@ class DetailDabo {
     return DetailDabo(
         bale_2_25: json['bale_2_25'],
         bale_2_5: json['bale_2_5'],
+        bale_3: json['bale_3'],
         bale5: json['bale_5'],
         bale10: json['bale_10'],
         bale75: json['bale_75'],

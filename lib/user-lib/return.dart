@@ -1,4 +1,5 @@
 // import 'package:abushakir/abushakir.dart';
+import 'package:dabo/utility-lib/HttpRequest.dart';
 import 'package:dabo/utility-lib/Utility.dart';
 import 'package:flutter/material.dart';
 
@@ -19,18 +20,25 @@ class ReturnDaboState extends State<ReturnDabo> {
   var with_10 = TextEditingController()..text = '0';
 
   String initialPlace = 'መጋገሪያ';
-  String initialDate = 'today';
-
+  String initialDate;
+  String newDate;
+  var itemes = <DropdownMenuItem<String>>[];
   int bale2_5 = 0;
   int bale5 = 0;
   int bale10 = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getDateFromDatabase(userName);
+  }
 
   ReturnDaboState({this.userName});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('የዳቦ መመዝገቢያ በ $userName'),
+          title: Text(' $userName'),
         ),
         body: Container(
             child: Form(
@@ -43,17 +51,24 @@ class ReturnDaboState extends State<ReturnDabo> {
                         children: [
                           Text(
                             "ቀን",
-                            
                             style: Utility.textStyle,
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           DropdownButton<String>(
-                            items: [],
+                            items: itemes,
                             value: initialDate,
                             onChanged: (String value) {
-                              // late 
+                              // late
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.refresh),
+                            onPressed: () {
+                              setState(() {
+                                initialDate = newDate;
+                              });
                             },
                           )
                         ],
@@ -99,115 +114,127 @@ class ReturnDaboState extends State<ReturnDabo> {
                       ),
                       Row(
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10, bottom: 10),
-                            child: TextFormField(
-                              autocorrect: true,
-                              validator: (val) {
-                                var isNum = num.tryParse(val);
-                                if (val.isEmpty) {
-                                  return "እባክህ ብዛቱን  አስገባ";
-                                } else if (isNum == null) {
-                                  return "እባክህ ቁጥር ብቻ አስገባ";
-                                } else
-                                  return null;
-                              },
-                              onChanged: (String val) {
-                                if (_formKey.currentState.validate()) {}
-                              },
-                              textInputAction: TextInputAction.next,
-                              keyboardAppearance: Brightness.light,
-                              keyboardType: TextInputType.number,
-                              controller: with_2_5,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'ባለ 2.5 ብር ዳቦ',
-                                  hintText: 'ለምሳሌ 200',
-                                  errorStyle: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontStyle: FontStyle.italic,
-                                  )),
+                          Expanded(
+                            // padding: const EdgeInsets.all(8.0),
+                            // flex: 2,
+                            child: Container(
+                              // width: 200,
+                              margin: EdgeInsets.only(top: 10, bottom: 10),
+                              child: TextFormField(
+                                autocorrect: true,
+                                validator: (val) {
+                                  var isNum = num.tryParse(val);
+                                  if (val.isEmpty) {
+                                    return "እባክህ ብዛቱን  አስገባ";
+                                  } else if (isNum == null) {
+                                    return "እባክህ ቁጥር ብቻ አስገባ";
+                                  } else
+                                    return null;
+                                },
+                                onChanged: (String val) {
+                                  if (_formKey.currentState.validate()) {}
+                                },
+                                textInputAction: TextInputAction.next,
+                                keyboardAppearance: Brightness.light,
+                                keyboardType: TextInputType.number,
+                                controller: with_2_5,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'ባለ 2.5 ብር ዳቦ',
+                                    hintText: 'ለምሳሌ 200',
+                                    errorStyle: TextStyle(
+                                      color: Colors.redAccent,
+                                      fontStyle: FontStyle.italic,
+                                    )),
+                              ),
                             ),
                           ),
-                          Text("${true ? bale2_5 : ''}")
+                          Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Text(""))
                         ],
                       ),
                       Row(
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10, bottom: 10),
-                            child: TextFormField(
-                              autocorrect: true,
-                              validator: (val) {
-                                var isNum = num.tryParse(val);
-                                if (val.isEmpty) {
-                                  return "እባክህ ብዛቱን  አስገባ";
-                                } else if (isNum == null) {
-                                  return "እባክህ ቁጥር ብቻ አስገባ";
-                                } else
-                                  return null;
-                              },
-                              onChanged: (String val) {
-                                if (_formKey.currentState.validate()) {}
-                              },
-                              textInputAction: TextInputAction.next,
-                              keyboardAppearance: Brightness.light,
-                              keyboardType: TextInputType.number,
-                              controller: with_5,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'ባለ 5 ብር ዳቦ',
-                                  hintText: 'ለምሳሌ 20',
-                                  errorStyle: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontStyle: FontStyle.italic,
-                                  )),
+                          Expanded(
+                            // margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 10, right: 10),
+                              child: TextFormField(
+                                autocorrect: true,
+                                validator: (val) {
+                                  var isNum = num.tryParse(val);
+                                  if (val.isEmpty) {
+                                    return "እባክህ ብዛቱን  አስገባ";
+                                  } else if (isNum == null) {
+                                    return "እባክህ ቁጥር ብቻ አስገባ";
+                                  } else
+                                    return null;
+                                },
+                                onChanged: (String val) {
+                                  if (_formKey.currentState.validate()) {}
+                                },
+                                textInputAction: TextInputAction.next,
+                                keyboardAppearance: Brightness.light,
+                                keyboardType: TextInputType.number,
+                                controller: with_5,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'ባለ 5 ብር ዳቦ',
+                                    hintText: 'ለምሳሌ 20',
+                                    errorStyle: TextStyle(
+                                      color: Colors.redAccent,
+                                      fontStyle: FontStyle.italic,
+                                    )),
+                              ),
                             ),
                           ),
-                           Text("${true ? bale5 : ''}")
+                          Container(child: Text( ''))
                         ],
                       ),
                       Row(
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10, bottom: 10),
-                            child: TextFormField(
-                              autocorrect: true,
-                              validator: (val) {
-                                var isNum = num.tryParse(val);
-                                if (val.isEmpty) {
-                                  return "እባክህ ብዛቱን  አስገባ";
-                                } else if (isNum == null) {
-                                  return "እባክህ ቁጥር ብቻ አስገባ";
-                                } else
-                                  return null;
-                              },
-                              onChanged: (String val) {
-                                if (_formKey.currentState.validate()) {}
-                              },
-                              textInputAction: TextInputAction.next,
-                              keyboardAppearance: Brightness.light,
-                              keyboardType: TextInputType.number,
-                              controller: with_10,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'ባለ 10 ብር ዳቦ',
-                                  hintText: 'ለምሳሌ 20',
-                                  errorStyle: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontStyle: FontStyle.italic,
-                                  )),
+                          Expanded(
+                            // margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: TextFormField(
+                                autocorrect: true,
+                                validator: (val) {
+                                  var isNum = num.tryParse(val);
+                                  if (val.isEmpty) {
+                                    return "እባክህ ብዛቱን  አስገባ";
+                                  } else if (isNum == null) {
+                                    return "እባክህ ቁጥር ብቻ አስገባ";
+                                  } else
+                                    return null;
+                                },
+                                onChanged: (String val) {
+                                  if (_formKey.currentState.validate()) {}
+                                },
+                                textInputAction: TextInputAction.next,
+                                keyboardAppearance: Brightness.light,
+                                keyboardType: TextInputType.number,
+                                controller: with_10,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'ባለ 10 ብር ዳቦ',
+                                    hintText: 'ለምሳሌ 20',
+                                    errorStyle: TextStyle(
+                                      color: Colors.redAccent,
+                                      fontStyle: FontStyle.italic,
+                                    )),
+                              ),
                             ),
                           ),
-                           Text("${true ? bale10 : ''}")
+                          Container(child: Text(""))
                         ],
                       ),
                       Container(
                           margin: EdgeInsets.only(top: 10, bottom: 10),
                           child: ElevatedButton(
                             onPressed: () {
-                              
-                              var dabo = Map<String, String>();
+                              var dabo = Map<String, dynamic>();
 
                               dabo['userName'] = this.userName;
                               dabo['date'] = this.initialDate;
@@ -216,15 +243,35 @@ class ReturnDaboState extends State<ReturnDabo> {
                               dabo['bale_5'] = with_5.text;
                               dabo['bale_10'] = with_10.text;
                               dabo['action'] = 'RETURN_DABO';
-
-                              // Utility.insertDabo(dabo, context);
+                              Utility.insertDabo(dabo, context);
                             },
                             child: Text('Save'),
                             style: ButtonStyle(
-                                animationDuration: Duration(seconds: 10)),
-                          ))
+                                animationDuration: Duration(seconds: 6)),
+                          )),
+                          Divider(thickness: 6),
+                          Center(
+                            child: Text('የተመላሽ ዳቦ ዝርዝር',style: Utility.textStyle),
+
+                          ),
+                          Divider(thickness: 6),
+
                     ],
                   ),
                 ))));
+  }
+
+  void getDateFromDatabase(String userName) {
+    futureDateModel(userName).then((value) {
+      this.newDate = value[0].date;
+      //
+      // print('date of=${PayementState.newDate}');
+      for (var date in value) {
+        itemes.add(DropdownMenuItem<String>(
+          child: Text(date.date),
+          value: date.date,
+        ));
+      }
+    });
   }
 }

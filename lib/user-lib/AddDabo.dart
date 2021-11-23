@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class Body extends StatefulWidget {
   String userName;
+
   Body({this.userName});
   @override
   State<StatefulWidget> createState() {
@@ -16,13 +17,37 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   String userName;
   _BodyState({this.userName});
+
+  _BodyState.forEditing(Map fromDb, String userName) {
+    this.with_2_25.text = fromDb['bale_2_25'];
+    this.with_2_5.text = fromDb['bale_2_5'];
+    this.with_3.text = fromDb['bale_3'];
+
+    this.with_5.text = fromDb['bale_5'];
+
+    this.with_10.text = fromDb['bale_10'];
+    this.with_75_d.text = fromDb['bale_75'];
+    this.with_100_d.text = fromDb['bale_100'];
+    this.with_120_d.text = fromDb['bale_120'];
+    this.with_150_d.text = fromDb['bale_150'];
+    this.with_200_d.text = fromDb['bale_200'];
+    this.initialDate = fromDb['date'];
+    this.initialPlace = fromDb['place'];
+    this.isForEditing = true;
+  }
   final geram = 75;
   var _formKey = GlobalKey<FormState>();
-  /***
-   * with varibale used for accesing textfield value 
-   */
+
+  /// isForEditing is to check wether the button is ready for editting or not
+  bool isForEditing = false;
+
+  /// with varibale used for accesing textfield value
+
   var with_2_25 = TextEditingController()..text = '0';
   var with_2_5 = TextEditingController()..text = '0';
+  var with_3 = TextEditingController()..text = '0';
+
+
   var with_5 = TextEditingController()..text = '0';
   var with_10 = TextEditingController()..text = '0';
   var with_75_d = TextEditingController()..text = '0';
@@ -42,6 +67,8 @@ class _BodyState extends State<Body> {
    */
   var cost2_25 = 2.25;
   var cost2_5 = 2.5;
+  var cost_3 = 3;
+
   var cost5 = 5;
   var cost10 = 10;
   var cost75 = 75;
@@ -55,9 +82,6 @@ class _BodyState extends State<Body> {
     return Scaffold(
       appBar: AppBar(
         title: Text('የዳቦ መመዝገቢያ በ $userName'),
-        actions: [
-          Text('${Utility().totalPaidBirr}')
-        ],
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
@@ -87,7 +111,35 @@ class _BodyState extends State<Body> {
                         initialDate = value;
                       });
                     },
-                  )
+                  ),
+                  Spacer(),
+                  OutlinedButton(onPressed: () {
+                     setState(() {
+                          if (_formKey.currentState.validate()) {
+                            var dabo = Map<String, String>();
+                            dabo = {
+                              'userName': this.userName,
+                              'date': this.initialDate,
+                              'place': this.initialPlace,
+                              'bale_2_25': with_2_25.text,
+                              'bale_2_5': with_2_5.text,
+                              'bale_3': with_3.text,
+                              'bale_5': with_5.text,
+                              'bale_10': with_10.text,
+                              'bale_75': with_75_d.text,
+                              'bale_100': with_100_d.text,
+                              'bale_120': with_120_d.text,
+                              'bale_150': with_150_d.text,
+                              'bale_200': with_200_d.text,
+                              'unPaidBirr': calculatPrices(),
+                              'action': 'ADD_DABO'
+                            };
+
+                            Utility.insertDabo(dabo, context);
+                            // Navigator.pop(context,true);
+                          }
+                        });
+                  }, child: Text('Save'))
                 ],
               ),
               Row(
@@ -114,8 +166,8 @@ class _BodyState extends State<Body> {
                         value: 'ጎማጣ',
                       ),
                       DropdownMenuItem(
-                        child: Text('መድሃኒዓለም'),
-                        value: 'መድሃኒዓለም',
+                        child: Text('ሜድሮክ'),
+                        value: 'ሜድሮክ',
                       ),
                       DropdownMenuItem(
                         child: Text('ሲቭ'),
@@ -126,6 +178,7 @@ class _BodyState extends State<Body> {
                     onChanged: (String value) {
                       setState(() {
                         initialPlace = value;
+                        // print('Date =$initialPlace');
                       });
                     },
                   )
@@ -193,6 +246,37 @@ class _BodyState extends State<Body> {
                       )),
                 ),
               ),
+               Container(
+                margin: EdgeInsets.only(top: 10, bottom: 10),
+                child: TextFormField(
+                  autocorrect: true,
+                  validator: (val) {
+                    var isNum = num.tryParse(val);
+                    if (val.isEmpty) {
+                      return "እባክህ ብዛቱን  አስገባ";
+                    } else if (isNum == null) {
+                      return "እባክህ ቁጥር ብቻ አስገባ";
+                    } else
+                      return null;
+                  },
+                  onChanged: (String val) {
+                    if (_formKey.currentState.validate()) {}
+                  },
+                  textInputAction: TextInputAction.next,
+                  keyboardAppearance: Brightness.light,
+                  keyboardType: TextInputType.number,
+                  controller: with_3,
+                  // initialValue: '0',
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'ባለ 3 ብር ዳቦ',
+                      hintText: 'ለምሳሌ 200',
+                      errorStyle: TextStyle(
+                        color: Colors.yellowAccent,
+                        fontStyle: FontStyle.italic,
+                      )),
+                ),
+              ),
               Container(
                 margin: EdgeInsets.only(bottom: 10),
                 child: TextFormField(
@@ -221,6 +305,10 @@ class _BodyState extends State<Body> {
                         color: Colors.yellowAccent,
                         fontStyle: FontStyle.italic,
                       )),
+
+                      /***
+                       * 
+                       */
                 ),
               ),
               Container(
@@ -364,7 +452,9 @@ class _BodyState extends State<Body> {
                   keyboardType: TextInputType.number,
                   controller: with_150_d,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        
+                      ),
                       labelText: 'ባለ 150 ብር ድፎ',
                       hintText: 'ለምሳሌ 2',
                       errorStyle: TextStyle(
@@ -410,41 +500,56 @@ class _BodyState extends State<Body> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {
-                        setState(() {
-                          if (_formKey.currentState.validate()) {
-                            var dabo = Map<String, String>();
-                            dabo = {
-                              'userName': this.userName,
-                              'date': this.initialDate,
-                              'place': this.initialPlace,
-                              'bale_2_25': with_2_25.text,
-                              'bale_2_5': with_2_5.text,
-                              'bale_5': with_5.text,
-                              'bale_10': with_10.text,
-                              'bale_75': with_75_d.text,
-                              'bale_100': with_100_d.text,
-                              'bale_120': with_120_d.text,
-                              'bale_150': with_150_d.text,
-                              'bale_200': with_200_d.text,
-                              'unPaidBirr': calculatPrices(),
-                              'action': 'ADD_DABO'
-                            };
+                        if (!isForEditing) {
+                          setState(() {
+                            if (_formKey.currentState.validate()) {
+                              var dabo = Map<String, String>();
+                              dabo = {
+                                'userName': this.userName,
+                                'date': this.initialDate,
+                                'place': this.initialPlace,
+                                'bale_2_25': with_2_25.text,
+                                'bale_2_5': with_2_5.text,
+                                'bale_3': with_3.text,
+                                'bale_5': with_5.text,
+                                'bale_10': with_10.text,
+                                'bale_75': with_75_d.text,
+                                'bale_100': with_100_d.text,
+                                'bale_120': with_120_d.text,
+                                'bale_150': with_150_d.text,
+                                'bale_200': with_200_d.text,
+                                'unPaidBirr': calculatPrices(),
+                                'action': 'ADD_DABO'
+                              };
 
-                            Utility.insertDabo(dabo, context);
-                            // Navigator.pop(context,true);
-                          }
-                        });
+                              Utility.insertDabo(dabo, context);
+                              // Navigator.pop(context,true);
+                            }
+                          });
+                        } else {
+                          Utility.showSnakBar(
+                              "Please click the edit button than save button",
+                              context,
+                              Colors.redAccent);
+                        }
                       },
                       child: Text('Save'),
                     ),
                   ),
                   Container(margin: EdgeInsets.only(left: 5, right: 5)),
                   Expanded(
-                    child: TextButton(
+                    child: OutlinedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        if (!isForEditing) {
+                          Utility.showSnakBar(
+                              "Please click the edit button than save button",
+                              context,
+                              Colors.redAccent);
+                        } else {
+                          /// do update call
+                        }
                       },
-                      child: Text('ዝርዝሩን ለማየት'),
+                      child: Text('Update'),
                     ),
                   )
                 ],
@@ -463,6 +568,8 @@ class _BodyState extends State<Body> {
   String calculatPrices() {
     var bale_2_25 = int.parse(with_2_25.text) * cost2_25;
     var bale_2_5 = int.parse(with_2_5.text) * cost2_5;
+    var bale_3 = int.parse(with_3.text) * cost_3;
+
     var bale5 = int.parse(with_5.text) * cost5;
     var bale10 = int.parse(with_10.text) * cost10;
     var bale75 = int.parse(with_75_d.text) * cost75;
@@ -470,25 +577,10 @@ class _BodyState extends State<Body> {
     var bale120 = int.parse(with_120_d.text) * cost120;
     var bale150 = int.parse(with_150_d.text) * cost150;
     var bale200 = int.parse(with_200_d.text) * cost200;
-    /***
-     * amont variable stores the total bread made today  
-     */
-    // totalItem=${};
-    // var amont2_5 = int.parse(with_2_5.text);
-    // var amont5 = (int.parse(with_5.text) * 2);
-    // var amont10 = (int.parse(with_10.text) * 4);
-    // var amont75 = ((int.parse(with_75_d.text) * 2000) / geram);
-    // var amont100 = ((int.parse(with_100_d.text) * 2500) / geram);
-    // var amont120 = ((int.parse(with_120_d.text) * 2700) / geram);
-    // var amont150 = ((int.parse(with_150_d.text) * 2900) / geram);
-    // var amont200 = ((int.parse(with_200_d.text) * 3000) / geram);
-    // totalItem =
-    //     'አጠቃላይ ዳቦ = ${amont2_5 + amont5 + amont10 + amont75 + amont100 + amont120 + amont150 + amont200}';
-    /***
-     * total stores the total sales held on today 
-     */
+
     var total = bale_2_25 +
         bale_2_5 +
+        bale_3 +
         bale5 +
         bale10 +
         bale75 +
@@ -499,32 +591,4 @@ class _BodyState extends State<Body> {
 
     return total.toString();
   }
-
-  // void insertDabo(Map<String, dynamic> dabo, BuildContext c) async {
-  //   bool result = await Insert.insertDabo(dabo);
-  //   if (result) {
-  //     showSnakBar("በትክክል ተመዝግቦል", c, Colors.greenAccent);
-  //   } else {
-  //     showSnakBar("ይቅርታ ዳቦው አልተመዘገበም", c, Colors.white30);
-  //   }
-  // }
-
-  // void showSnakBar(String s, BuildContext c, Color color) {
-  //   var snackbar = SnackBar(
-  //       content: Text(
-  //         s,
-  //         style: Utility.textStyle,
-  //       ),
-  //       elevation: 10,
-  //       backgroundColor: color,
-  //       action: SnackBarAction(
-  //         label: 'Close',
-  //         textColor: color,
-  //         onPressed: () {
-  //           // ScaffoldFeatureController.
-  //           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-  //         },
-  //       ));
-  //   ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  // }
 }

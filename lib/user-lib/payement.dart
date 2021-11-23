@@ -30,19 +30,34 @@ class PayementState extends State<Payement> {
   var items = <DropdownMenuItem<String>>[];
 // int 1a;
   var formKey = GlobalKey<FormState>();
+  int itemCount = 0;
 
   @override
   void initState() {
     super.initState();
     getDateFromDatabase(userName);
+    getNewPayement();
   }
 
   PayementState(this.userName, this.initialDate);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        persistentFooterButtons: [
+          CircleAvatar(
+            backgroundColor: itemCount > 0 ? Colors.red : Colors.blueAccent,
+            child: Text("$itemCount",
+                style: TextStyle(
+                    color: itemCount > 0 ? Colors.white : Colors.white)),
+          ),
+          Text("New Payement",
+              style: TextStyle(
+                color: itemCount > 0 ? Colors.red : Colors.white,
+              )),
+        ],
         appBar: AppBar(
-            title: Text('*${this.userName.toUpperCase()}* እንኮን ደህና መጣህ')),
+            title: Text(
+                '*${this.userName.toLowerCase() == 'all' ? 'Meshu' : this.userName}* እንኮን ደህና መጣህ')),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
@@ -53,7 +68,8 @@ class PayementState extends State<Payement> {
                   margin: EdgeInsets.all(5),
                   alignment: Alignment.center,
                   duration: Duration(seconds: 5),
-                  child: Text('Dear $userName '),
+                  child: Text(
+                      'Dear ${this.userName.toLowerCase() == 'all' ? 'Meshu' : this.userName}'),
                 ),
                 Row(
                   children: [
@@ -110,8 +126,8 @@ class PayementState extends State<Payement> {
                           value: 'ጎማጣ',
                         ),
                         DropdownMenuItem(
-                          child: Text('መድሃኒዓለም'),
-                          value: 'መድሃኒዓለም',
+                          child: Text('ሜድሮክ'),
+                          value: 'ሜድሮክ',
                         ),
                         DropdownMenuItem(
                           child: Text('ሲቭ'),
@@ -149,11 +165,17 @@ class PayementState extends State<Payement> {
                     keyboardType: TextInputType.number,
                     controller: paidBirrController,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        filled: true,
+                        // hasFloatingPlaceholder: true,
+                        // floatingLabelBehavior: FloatingLabelBehavior.,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: Colors.orangeAccent, width: 2)),
                         labelText: 'የብሩ መጠን',
                         hintText: 'ለምሳሌ 200 ብር',
                         errorStyle: TextStyle(
-                          color: Colors.yellowAccent,
+                          color: Colors.red,
                           fontStyle: FontStyle.italic,
                         )),
                   ),
@@ -187,12 +209,12 @@ class PayementState extends State<Payement> {
                     } else if (newDate.isEmpty) {
                       Utility.showSnakBar(
                           "እባክህ ቀኑን ምርት", context, Colors.red[400]);
-                    } else if(this.unPaidBirr==0){
-                        Utility.showSnakBar(
-                          "${this.initialPlace } ላይ ሁሉም ሒሳብ ከዚህ በፊት ተከፍሎል ፡፡", context, Colors.red[400]);
-                    }
-                    
-                     else {
+                    } else if (this.unPaidBirr == 0) {
+                      Utility.showSnakBar(
+                          "${this.initialPlace} ላይ ሁሉም ሒሳብ ከዚህ በፊት ተከፍሎል ፡፡",
+                          context,
+                          Colors.red[400]);
+                    } else {
                       Utility.showAlertDialog(context, "እባክህ ትንሽ ጠብቅ");
 /**
  *  double oldPaiedBirr,
@@ -221,7 +243,7 @@ class PayementState extends State<Payement> {
                           setState(() {
                             this.unPaidBirr = this.unPaidBirr -
                                 double.parse(paidBirrController.text);
-                                this.paidBirr=this.paidBirr+
+                            this.paidBirr = this.paidBirr +
                                 double.parse(paidBirrController.text);
                           });
                         } else {
@@ -248,7 +270,7 @@ class PayementState extends State<Payement> {
   }
 
   void getDateFromDatabase(String userName) {
-    futureDateModel(userName).then((value) {
+    futureDateModel('all').then((value) {
       this.date11 = value[0].date;
       //
       // print('date of=${PayementState.newDate}');
@@ -263,7 +285,7 @@ class PayementState extends State<Payement> {
 
   void getBirr(String date, String place) async {
     Utility.showAlertDialog(context, "እባክህ ትንሽ ጠብቅ");
-    var payementModel = await futurePayementModel(userName, date, place);
+    var payementModel = await futurePayementModel('all', date, place);
     Navigator.pop(context, true);
     double val1 = 0;
     double val2 = 0;
@@ -275,6 +297,14 @@ class PayementState extends State<Payement> {
     setState(() {
       unPaidBirr = val1;
       paidBirr = val2;
+    });
+  }
+
+  void getNewPayement() {
+    getNewPayementNotification().then((value) {
+      setState(() {
+        itemCount = value;
+      });
     });
   }
 }

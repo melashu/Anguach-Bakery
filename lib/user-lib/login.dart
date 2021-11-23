@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:abushakir/abushakir.dart';
 import 'package:dabo/admin-lib/AdminHome.dart';
+import 'package:dabo/admin-lib/debt.dart';
 import 'package:dabo/user-lib/Home.dart';
 import 'package:dabo/utility-lib/Utility.dart';
 import 'package:http/http.dart' as http;
@@ -8,14 +10,23 @@ import 'package:flutter/material.dart';
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+      // EtDatetime dt = EtDatetime.now();
+    // debugPrint("dt");
     return MaterialApp(
         title: 'Anguach Mobile',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            primarySwatch: Colors.blue,
-            accentColor: Colors.redAccent,
-            brightness: Brightness.dark),
-        home: LoginPage());
+          // primarySwatch: Colors.blue[],
+          accentColor: Colors.blueAccent,
+          primaryColor: Colors.blueAccent,
+          // brightness: Brightness.dark
+        ),
+        home: LoginPage()
+          
+        );
+        
+        //LoginPage()
+        // );
   }
 }
 
@@ -33,6 +44,7 @@ class LoginState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+  
     return Scaffold(
       appBar: AppBar(
         title: Text('Login Page'),
@@ -99,7 +111,9 @@ class LoginState extends State<LoginPage> {
                   children: [
                     Expanded(
                       child: OutlinedButton(
+                        // style: ButtonStyle.,
                         onPressed: () {
+                          
                           setState(() {
                             if (formKey.currentState.validate()) {
                               // return CircularProgressIndicator();
@@ -128,25 +142,14 @@ class LoginState extends State<LoginPage> {
     String userName = userNameController.text;
     String password = passwordController.text;
 
-    // print('username=$userName and password=$password');
-    // Uri uri = Uri.parse("https://keteraraw.com/dabo/index.php");
-    // var response = await http.post(uri,
-    //     body: {'userName': userName, 'password': password, 'action': 'LOGIN'});
-
-    // if (response.statusCode == 200) {
-    //   if (response.body == 'empty') {
-    //     Utility.showSnakBar(
-    //         "Username ወይም password ተሳስትሃል፡፡ ", context, Colors.redAccent);
-    //   } else {
-    //     var toJson = json.decode(response.body);
-    //await
-    Utility.showAlertDialog(context, 'ትንሽ ጠብቅ');
+    Utility.showAlertDialog(context, 'ትንሽ ጠብቅ ');
+    // return Container(child: LinearProgressIndicator());
     LoginModel loginModel = await loginFuture(userName, password, context);
-    if (loginModel.role == 'admin') {
+    if (loginModel.role.toLowerCase() == 'admin'.toLowerCase()) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return AdminHome(userName: userName);
       }));
-    } else if (loginModel.role == 'user') {
+    } else if (loginModel.role.toLowerCase() == 'user'.toLowerCase()) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return Home(userName);
       }));
@@ -184,7 +187,9 @@ Future<LoginModel> loginFuture(
       return LoginModel.fromJson(toJson[0]);
     }
   } else {
-    Utility.showSnakBar("Something went wrong! Please call to ***0980631983***",
-        context, Colors.redAccent);
+    Utility.showSnakBar(
+        "Something went wrong! Please call to ***0980631983*** ${response.body}",
+        context,
+        Colors.redAccent);
   }
 }
