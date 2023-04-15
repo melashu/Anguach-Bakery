@@ -1,7 +1,5 @@
 # Anguach Bakery
 
-It is a mobile app that used to manage bakery business! 
-
 <a name="readme-top"></a>
 # 📗 Table of Contents
 
@@ -19,8 +17,7 @@ It is a mobile app that used to manage bakery business!
 
 # 📖 Anguach Bakery <a name="about-project"></a>
 
-This app is designed using Leaderboard API. It enables the players to record their name and score value. Users can see their previous score's and current score values. 
-
+It is a mobile app that used to manage bakery business! 
 
 ## 🛠 Built With <a name="built-with"></a>
 
