@@ -1,8 +1,8 @@
 # Anguach Bakery
 
+It is a mobile app that used to manage bakery business! 
+
 <a name="readme-top"></a>
-
-
 # 📗 Table of Contents
 
 - [Anguach Bakery](#anguach-bakery)
@@ -15,12 +15,7 @@
     - [Setup](#setup)
     - [Usage](#usage)
   - [👥 Authors ](#-authors-)
-  - [🔭 Future Features ](#-future-features-)
-  - [🔴 Live Demo](#-live-demo)
-  - [🙏 Acknowledgments ](#-acknowledgments-)
-  - [🤝 Contributing ](#-contributing-)
   - [⭐️ Show your support ](#️-show-your-support-)
-  - [📝 License](#-license)
 
 # 📖 Anguach Bakery <a name="about-project"></a>
 
@@ -49,6 +44,7 @@ To get a local copy up and running, follow these steps.
 
 - Install Vscode [Download VScode](https://code.visualstudio.com/download#).
 - Install Vscode [Flutter SDK](https://docs.flutter.dev/get-started/install/windows#).
+- Install Vscode [Android SDK]([https://docs.flutter.dev/get-started/install/windows#](https://developer.android.com/studio/install)).
 
 ### Setup
 
@@ -58,16 +54,17 @@ Open your terminal
 
 Clone this repository to your desired folder
 
-`git clone https://github.com/melashu/Leaderboard.git`
+`https://github.com/melashu/Anguach-Bakery.git`
 
 **Then run**
 
-cd `Leaderboard`
+cd `Anguach-Bakery`
 
 ### Usage
 
-- Run ```npm install```.
-- Run ```npm run start``` to run the app on your web browser.
+- Run ```flutter pub get```.
+- Run virtual emulator or connect your phone to your pc.
+- Run ```flutter run``` to run the app on your web browser.
 
 ## 👥 Authors <a name="authors"></a>
 
@@ -76,25 +73,6 @@ cd `Leaderboard`
 - GitHub: [@melashu](https://github.com/melashu)
 - Twitter: [@meshu102](https://twitter.com/meshu102)
 - LinkedIn: [Melashu Amare](https://www.linkedin.com/in/melashu-amare/)
-
-<!-- FUTURE FEATURES -->
-
-## 🔭 Future Features <a name="future-features"></a>
-
-In the future I need to improve the following features.
- 
-- [ ] **Add responsiveness features.**
-
-## 🔴 Live Demo
-[Go Live](https://melashu.github.io/Leaderboard/)
-
-## 🙏 Acknowledgments <a name="acknowledgements"></a>
-
-- To Microverse crew.
-- To Project Designer  [Cindy Shin in Behance](https://www.behance.net/adagio07).
-- To creaters of [Icons8](icons8.com/icons).
-- To my coding partner [Amtresu](https://github.com/Amtresu) and my morning session Team. 
-- To my Code Reviewer.
 
 ## 🤝 Contributing <a name="contributing"></a>
 
@@ -105,10 +83,6 @@ Feel free to check the [issues page.](https://github.com/melashu/Leaderboard/iss
 ## ⭐️ Show your support <a name="support"></a>
 
 Give a star if you like this project!
-## 📝 License
-
-This project is [MIT](./LICENSE) licensed.
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
