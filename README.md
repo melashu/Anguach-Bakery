@@ -41,7 +41,7 @@ To get a local copy up and running, follow these steps.
 
 - Install Vscode [Download VScode](https://code.visualstudio.com/download#).
 - Install Vscode [Flutter SDK](https://docs.flutter.dev/get-started/install/windows#).
-- Install Vscode [Android SDK]([https://docs.flutter.dev/get-started/install/windows#](https://developer.android.com/studio/install)).
+- Install Vscode [Android SDK](https://developer.android.com/studio/install).
 
 ### Setup
 
